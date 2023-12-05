@@ -1,30 +1,38 @@
-"use client";
 import React, { useState } from "react";
 import {
 	Card,
 	CardHeader,
 	CardBody,
 	CardFooter,
-	Avatar,
 	Button,
+	Textarea,
 } from "@nextui-org/react";
 
 export default function UserCard({ selectedPost }) {
 	const [loading, setLoading] = useState(false);
-	const idiot = `Idiot: Unintentionally Flagrant/Nonsensical (Cunningham’s Law Trigger)
-    Neither from a place of malice or support, the idiot is a seemingly neutral persona.
-    With no regard for the consequences or successes of their actions, their commentary is seemingly throw-away.
-    They typically do something for the sake of doing it. This particular character will try, say, do anything and everything because it popped in their head. 
-    Online, this behavior typically makes bold statements without basis or standing, will repeatedly comment and engage because it sounds right, and often are the trigger for Cunningham’s law. 
-    They’re active on camping and outdoor forums, asking basic questions that anyone can answer/should know.
-    They’re easily influenced by social media and think of publications like The Onion are factual news organizations.
-    
-    Both the initial poster and the reposter, this persona is likely to believe anything they see and hear on the internet is true. They are often misled by the content they consume and frequently post and repost with commentary that validates the content they share. Neither argumentative nor confrontational, this poster will likely engage and respond from a genuine belief that the content they validate is true/real. The threshold of fantasy doesn’t exist, and everything is perceived to be real/treated as such. `;
+	const [notification, setNotification] = useState("");
+	const [selectedPersona, setSelectedPersona] = useState(null);
+	const [comment, setComment] = useState("");
 
-	const handleSubmit = async (persona: string) => {
+	const personas = [
+		{
+			id: 1,
+			description: "Idiot: Unintentionally Flagrant/Nonsensical...",
+		},
+		{ id: 2, description: "Funny: Intentionally Flagrant/Nonsensical..." },
+		{ id: 3, description: "Troll: Intentionally Flagrant/Nonsensical..." },
+		{ id: 4, description: "Troll: Intentionally Flagrant/Nonsensical..." },
+		{ id: 5, description: "Troll: Intentionally Flagrant/Nonsensical..." },
+		{ id: 6, description: "Troll: Intentionally Flagrant/Nonsensical..." },
+		// Add other personas here...
+	];
+
+	const handleSubmit = async () => {
 		setLoading(true);
-		if (!selectedPost) {
-			console.error("No post selected");
+		if (!selectedPost || selectedPersona === null) {
+			console.error("No post selected or persona not chosen");
+			setNotification("No post selected or persona not chosen");
+			setLoading(false);
 			return;
 		}
 
@@ -36,7 +44,11 @@ export default function UserCard({ selectedPost }) {
 					headers: {
 						"Content-Type": "application/json",
 					},
-					body: JSON.stringify({ ...selectedPost.post, persona: persona }), // Assuming selectedPost contains the post object
+					body: JSON.stringify({
+						...selectedPost.post,
+						persona: personas[selectedPersona - 1].description,
+						comment: comment,
+					}),
 				}
 			);
 
@@ -47,54 +59,60 @@ export default function UserCard({ selectedPost }) {
 			const data = await response.json();
 			setLoading(false);
 			console.log("Webhook response:", data);
+			setNotification(data.link);
 		} catch (error) {
 			setLoading(false);
 			console.error("Error calling webhook:", error);
+			setNotification("Error Submitting Comment");
 		}
 	};
 
 	return (
-		<Card className="max-w-[340px]">
-			<CardHeader className="justify-between">
-				<div className="flex gap-5">
-					<Avatar
-						isBordered
-						radius="full"
-						size="md"
-						src="/avatars/avatar-1.png"
-					/>
-					<div className="flex flex-col gap-1 items-start justify-center">
-						<h4 className="text-small font-semibold leading-none text-default-600">
-							Persona 1
-						</h4>
-						{/* <h5 className="text-small tracking-tight text-default-400">
-							@zoeylang
-						</h5> */}
+		<Card className="w-full min-w-[340px]">
+			<CardHeader className="justify-between flex flex-col items-start gap-4">
+				<Textarea
+					label="Comment"
+					placeholder="Enter your comment here"
+					className="max-w-xs"
+					value={comment}
+					onChange={(e) => setComment(e.target.value)}
+				/>
+				<div className="flex flex-col gap-1 items-start justify-center">
+					<h3>Choose a Persona:</h3>
+					<div className="flex gap-2">
+						{personas.map((persona) => (
+							<div key={persona.id} className="flex flex-col items-center">
+								<div
+									className={`h-6 w-6 rounded-full border-2 cursor-pointer ${
+										selectedPersona === persona.id
+											? "border-primary bg-primary"
+											: "border-default"
+									}`}
+									onClick={() => setSelectedPersona(persona.id)}
+								/>
+								<div>{persona.id}</div>
+							</div>
+						))}
 					</div>
+					<h5 className="text-small tracking-tight text-default-400">
+						{notification ? notification : ""}
+					</h5>
 				</div>
 			</CardHeader>
-			<CardBody className="px-3 py-0 text-small text-default-400"></CardBody>
+			<CardBody className="px-3 py-0 text-small text-default-400">
+				{/* You can display the selected persona description here if needed */}
+			</CardBody>
 			<CardFooter className="gap-3">
 				<Button
 					color="primary"
 					radius="full"
 					size="sm"
-					variant={"solid"}
-					onPress={() => handleSubmit(idiot)}
+					variant="solid"
+					onPress={handleSubmit}
 					isDisabled={loading}
 				>
 					{loading ? "loading..." : "Comment"}
 				</Button>
-				{/* <div className="flex gap-1">
-					<p className="font-semibold text-default-400 text-small">4</p>
-					<p className=" text-default-400 text-small">Following</p>
-				</div>
-				<div className="flex gap-1">
-					<p className="font-semibold text-default-400 text-small">
-						97.1K
-					</p>
-					<p className="text-default-400 text-small">Followers</p>
-				</div> */}
 			</CardFooter>
 		</Card>
 	);

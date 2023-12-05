@@ -9,6 +9,7 @@ import { GithubIcon } from "@/components/icons";
 import UserCard from "@/components/UserCard";
 import RedditPost from "@/components/RedditPost";
 import { useState } from "react";
+import AutomateSwitch from "@/components/AutomateSwitch";
 
 export default function Home() {
 	const [selectedPost, setSelectedPost] = useState({
@@ -16,17 +17,25 @@ export default function Home() {
 		post: null,
 	});
 	return (
-		<section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
-			<div className="inline-block max-w-lg text-center justify-center"></div>
-
-			<div className="flex gap-3">
-				<UserCard selectedPost={selectedPost} />
-			</div>
-
+		<section className="flex flex-row items-start justify-center gap-4 py-8 md:py-10">
 			<div className="mt-8">
 				<RedditPost
 					setSelectedPost={setSelectedPost}
 					selectedPost={selectedPost}
+					sourceType="AskReddit"
+					sourceName="Particular-Cap6132"
+				/>
+			</div>
+			<div className="flex gap-3 flex-col">
+				<UserCard selectedPost={selectedPost} />
+				<AutomateSwitch />
+			</div>
+			<div className="mt-8">
+				<RedditPost
+					setSelectedPost={setSelectedPost}
+					selectedPost={selectedPost}
+					sourceType="userActivity"
+					sourceName="Particular-Cap6132"
 				/>
 			</div>
 		</section>
