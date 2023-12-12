@@ -7,30 +7,23 @@ import {
 	Button,
 	Textarea,
 } from "@nextui-org/react";
+import { Profile } from "@/types/index";
 
-export default function UserCard({ selectedPost }) {
+export default function UserCard({
+	selectedPost,
+	profiles,
+}: {
+	selectedPost: any;
+	profiles: Profile[];
+}) {
 	const [loading, setLoading] = useState(false);
 	const [notification, setNotification] = useState("");
-	const [selectedPersona, setSelectedPersona] = useState(null);
+	const [selectedPersona, setSelectedPersona] = useState(null as any);
 	const [comment, setComment] = useState("");
-
-	const personas = [
-		{
-			id: 1,
-			description: "Idiot: Unintentionally Flagrant/Nonsensical...",
-		},
-		{ id: 2, description: "Funny: Intentionally Flagrant/Nonsensical..." },
-		{ id: 3, description: "Troll: Intentionally Flagrant/Nonsensical..." },
-		{ id: 4, description: "Troll: Intentionally Flagrant/Nonsensical..." },
-		{ id: 5, description: "Troll: Intentionally Flagrant/Nonsensical..." },
-		{ id: 6, description: "Troll: Intentionally Flagrant/Nonsensical..." },
-		// Add other personas here...
-	];
 
 	const handleSubmit = async () => {
 		setLoading(true);
 		if (!selectedPost || selectedPersona === null) {
-			console.error("No post selected or persona not chosen");
 			setNotification("No post selected or persona not chosen");
 			setLoading(false);
 			return;
@@ -46,7 +39,8 @@ export default function UserCard({ selectedPost }) {
 					},
 					body: JSON.stringify({
 						...selectedPost.post,
-						persona: personas[selectedPersona - 1].description,
+						profile: selectedPersona.name as string,
+						persona: selectedPersona.description as string,
 						comment: comment,
 					}),
 				}
@@ -78,19 +72,22 @@ export default function UserCard({ selectedPost }) {
 					onChange={(e) => setComment(e.target.value)}
 				/>
 				<div className="flex flex-col gap-1 items-start justify-center">
-					<h3>Choose a Persona:</h3>
+					<div>
+						<h3>Choose a Profile:</h3>
+						<h2>{selectedPersona ? selectedPersona?.name : "none"}</h2>
+					</div>
 					<div className="flex gap-2">
-						{personas.map((persona) => (
-							<div key={persona.id} className="flex flex-col items-center">
+						{profiles.map((item, index) => (
+							<div key={index} className="flex flex-col items-center">
 								<div
 									className={`h-6 w-6 rounded-full border-2 cursor-pointer ${
-										selectedPersona === persona.id
+										selectedPersona?.name === item?.name
 											? "border-primary bg-primary"
 											: "border-default"
 									}`}
-									onClick={() => setSelectedPersona(persona.id)}
+									onClick={() => setSelectedPersona(item)}
 								/>
-								<div>{persona.id}</div>
+								<div>{index + 1}</div>
 							</div>
 						))}
 					</div>
@@ -99,9 +96,7 @@ export default function UserCard({ selectedPost }) {
 					</h5>
 				</div>
 			</CardHeader>
-			<CardBody className="px-3 py-0 text-small text-default-400">
-				{/* You can display the selected persona description here if needed */}
-			</CardBody>
+			<CardBody className="px-3 py-0 text-small text-default-400"></CardBody>
 			<CardFooter className="gap-3">
 				<Button
 					color="primary"

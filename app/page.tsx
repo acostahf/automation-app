@@ -5,18 +5,16 @@ import { use, useState } from "react";
 import AutomateSwitch from "@/components/AutomateSwitch";
 import supabase from "@/supabaseClient";
 import { useEffect } from "react";
+import { Profile } from "@/types/index";
 
 export default function Home() {
-	const [selectedPost, setSelectedPost] = useState({
-		index: null,
-		post: null,
-	});
-	const [profiles, setProfiles] = useState([]);
+	const [selectedPost, setSelectedPost] = useState([]);
+	const [profiles, setProfiles] = useState<Profile[]>([]);
 
 	const fetchData = async () => {
 		try {
 			let { data, error } = await supabase.from("personas").select("*");
-			setProfiles(data);
+			setProfiles(data as Profile[]);
 		} catch (error) {
 			console.log(error);
 			alert(error);
@@ -38,10 +36,10 @@ export default function Home() {
 				/>
 			</div>
 			<div className="flex gap-3 flex-col">
-				<UserCard selectedPost={selectedPost} />
+				<UserCard selectedPost={selectedPost} profiles={profiles} />
 				<AutomateSwitch />
-				{profiles.map((profile) => (
-					<div>
+				{profiles.map((profile, index) => (
+					<div key={index}>
 						<h1>{profile.name}</h1>
 					</div>
 				))}
