@@ -1,21 +1,32 @@
 "use client";
-import { Link } from "@nextui-org/link";
-import { Snippet } from "@nextui-org/snippet";
-import { Code } from "@nextui-org/code";
-import { button as buttonStyles } from "@nextui-org/theme";
-import { siteConfig } from "@/config/site";
-import { title, subtitle } from "@/components/primitives";
-import { GithubIcon } from "@/components/icons";
 import UserCard from "@/components/UserCard";
 import RedditPost from "@/components/RedditPost";
-import { useState } from "react";
+import { use, useState } from "react";
 import AutomateSwitch from "@/components/AutomateSwitch";
+import supabase from "@/supabaseClient";
+import { useEffect } from "react";
 
 export default function Home() {
 	const [selectedPost, setSelectedPost] = useState({
 		index: null,
 		post: null,
 	});
+	const [profiles, setProfiles] = useState([]);
+
+	const fetchData = async () => {
+		try {
+			let { data, error } = await supabase.from("personas").select("*");
+			setProfiles(data);
+		} catch (error) {
+			console.log(error);
+			alert(error);
+		}
+
+		// handle data and error
+	};
+	useEffect(() => {
+		fetchData();
+	}, []);
 	return (
 		<section className="flex flex-row items-start justify-center gap-4 py-8 md:py-10">
 			<div className="mt-8">
@@ -29,6 +40,11 @@ export default function Home() {
 			<div className="flex gap-3 flex-col">
 				<UserCard selectedPost={selectedPost} />
 				<AutomateSwitch />
+				{profiles.map((profile) => (
+					<div>
+						<h1>{profile.name}</h1>
+					</div>
+				))}
 			</div>
 			<div className="mt-8">
 				<RedditPost
