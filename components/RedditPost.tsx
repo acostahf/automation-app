@@ -1,14 +1,13 @@
 import { Skeleton } from "@nextui-org/react";
 import React, { useEffect, useState } from "react";
-
-const subreddits = ["AskReddit", "Camping", "BackPacking"]; // Add your list of 20 subreddits here
+import supabase from "@/supabaseClient";
 
 interface RedditPost {
 	title: string;
 	author: string;
 	created_utc: number;
 	name: string;
-	subReddit: string;
+	subreddit: string;
 }
 
 interface RedditPostProps {
@@ -26,7 +25,17 @@ const RedditPost: React.FC<RedditPostProps> = ({
 }) => {
 	const [posts, setPosts] = useState<RedditPost[]>([]);
 	const [loading, setLoading] = useState(false);
+	const [subreddits, setSubreddits] = useState([]);
 
+	const fetchSubreddits = async () => {
+		try {
+			let { data, error } = await supabase.from("subreddits").select("*");
+			setSubreddits(data as any);
+		} catch (error) {
+			console.log(error);
+			alert(error);
+		}
+	};
 	const fetchPosts = async () => {
 		setLoading(true);
 		setPosts([]);
@@ -36,7 +45,7 @@ const RedditPost: React.FC<RedditPostProps> = ({
 				const fetchedPosts = await Promise.all(
 					subreddits.map(async (subreddit) => {
 						const response = await fetch(
-							`https://www.reddit.com/r/${subreddit}/new.json?limit=3`
+							`https://www.reddit.com/r/${subreddit.name}/new.json?limit=3`
 						);
 						const data = await response.json();
 						return data.data.children.map((child) => child.data); // Return an array of posts for each subreddit
@@ -73,7 +82,11 @@ const RedditPost: React.FC<RedditPostProps> = ({
 
 	useEffect(() => {
 		fetchPosts();
-	}, [sourceType, sourceName]);
+	}, [subreddits, sourceName, sourceType]);
+
+	useEffect(() => {
+		fetchSubreddits();
+	}, []);
 
 	return (
 		<div className="w-full max-w-[396px]">

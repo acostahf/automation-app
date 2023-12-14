@@ -31,7 +31,7 @@ export default function Home() {
 				<RedditPost
 					setSelectedPost={setSelectedPost}
 					selectedPost={selectedPost}
-					sourceType="AskReddit"
+					sourceType="subreddit"
 					sourceName="Particular-Cap6132"
 				/>
 			</div>

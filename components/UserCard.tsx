@@ -40,7 +40,7 @@ export default function UserCard({
 					body: JSON.stringify({
 						...selectedPost.post,
 						profile: selectedPersona.name as string,
-						persona: selectedPersona.description as string,
+						persona: selectedPersona.prompt as string,
 						comment: comment,
 					}),
 				}
@@ -51,9 +51,8 @@ export default function UserCard({
 			}
 
 			const data = await response.json();
-			setLoading(false);
-			console.log("Webhook response:", data);
 			setNotification(data.link);
+			setLoading(false);
 		} catch (error) {
 			setLoading(false);
 			console.error("Error calling webhook:", error);
