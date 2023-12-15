@@ -21,6 +21,36 @@ export default function UserCard({
 	const [selectedPersona, setSelectedPersona] = useState(null as any);
 	const [comment, setComment] = useState("");
 
+	const handleAISubmit = async () => {
+		setLoading(true);
+		if (!selectedPost || selectedPersona === null) {
+			setNotification("No post selected or persona not chosen");
+			setLoading(false);
+			return;
+		}
+
+		try {
+			const res = await fetch("/openai", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					post: selectedPost.post,
+					profile: selectedPersona.prompt as string,
+				}),
+			});
+			const data = await res.json();
+			console.log("---------", data);
+			setComment(data.chatCompletion.choices[0].message.content);
+			setLoading(false);
+		} catch (error) {
+			setLoading(false);
+			console.error("Error calling webhook:", error);
+			setNotification("Error Submitting Comment");
+		}
+	};
+
 	const handleSubmit = async () => {
 		setLoading(true);
 		if (!selectedPost || selectedPersona === null) {
@@ -66,7 +96,7 @@ export default function UserCard({
 				<Textarea
 					label="Comment"
 					placeholder="Enter your comment here"
-					className="max-w-xs"
+					// className="max-w-xs"
 					value={comment}
 					onChange={(e) => setComment(e.target.value)}
 				/>
@@ -106,6 +136,16 @@ export default function UserCard({
 					isDisabled={loading}
 				>
 					{loading ? "loading..." : "Comment"}
+				</Button>
+				<Button
+					color="primary"
+					radius="full"
+					size="sm"
+					variant="solid"
+					onPress={handleAISubmit}
+					isDisabled={loading}
+				>
+					{loading ? "loading..." : "Generate Comment"}
 				</Button>
 			</CardFooter>
 		</Card>

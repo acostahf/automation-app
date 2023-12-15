@@ -35,7 +35,7 @@ export default function Home() {
 					sourceName="Particular-Cap6132"
 				/>
 			</div>
-			<div className="flex gap-3 flex-col">
+			<div className="flex gap-3 flex-col w-full max-w-3xl">
 				<UserCard selectedPost={selectedPost} profiles={profiles} />
 				<AutomateSwitch />
 				{profiles.map((profile, index) => (
@@ -44,14 +44,14 @@ export default function Home() {
 					</div>
 				))}
 			</div>
-			<div className="mt-8">
+			{/* <div className="mt-8">
 				<RedditPost
 					setSelectedPost={setSelectedPost}
 					selectedPost={selectedPost}
 					sourceType="userActivity"
 					sourceName="Particular-Cap6132"
 				/>
-			</div>
+			</div> */}
 		</section>
 	);
 }
