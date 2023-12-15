@@ -26,15 +26,14 @@ export default function Home() {
 		fetchData();
 	}, []);
 	return (
-		<section className="flex flex-row items-start justify-center gap-4 py-8 md:py-10">
-			<div className="mt-8">
-				<RedditPost
-					setSelectedPost={setSelectedPost}
-					selectedPost={selectedPost}
-					sourceType="subreddit"
-					sourceName="Particular-Cap6132"
-				/>
-			</div>
+		<section className="w-full flex flex-row items-start justify-center gap-4 py-8 md:py-10">
+			<RedditPost
+				setSelectedPost={setSelectedPost}
+				selectedPost={selectedPost}
+				sourceType="subreddit"
+				sourceName="Particular-Cap6132"
+			/>
+
 			<div className="flex gap-3 flex-col w-full max-w-3xl">
 				<UserCard selectedPost={selectedPost} profiles={profiles} />
 				<AutomateSwitch />
