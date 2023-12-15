@@ -1,4 +1,11 @@
-import { ScrollShadow, Skeleton } from "@nextui-org/react";
+import {
+	Button,
+	ScrollShadow,
+	Skeleton,
+	Popover,
+	PopoverTrigger,
+	PopoverContent,
+} from "@nextui-org/react";
 import React, { useEffect, useState } from "react";
 import supabase from "@/supabaseClient";
 import { type } from "os";
@@ -9,6 +16,8 @@ interface RedditPost {
 	created_utc: number;
 	name: string;
 	subreddit: string;
+	selftext: string;
+	num_comments: number;
 }
 
 interface RedditPostProps {
@@ -57,6 +66,7 @@ const RedditPost: React.FC<RedditPostProps> = ({
 			);
 			const mergedPosts = fetchedPosts.flatMap((post) => post); // Flatten the array of arrays into a single array
 			setPosts(mergedPosts);
+			console.log(mergedPosts);
 			setLoading(false);
 		} catch (error) {
 			setLoading(false);
@@ -102,14 +112,48 @@ const RedditPost: React.FC<RedditPostProps> = ({
 						<div
 							key={post.created_utc}
 							onClick={() => setSelectedPost({ index, post })}
-							className={
+							className={` cursor-pointer
+							${
 								selectedPost?.index === index
-									? "mb-2 p-2 max-w-l border-2 border-blue-500 rounded-lg"
-									: "mb-2 p-2 max-w-l border-2 border-gray-100/70 rounded-lg"
+									? "mb-2 p-2 max-w-l bg-blue-500 rounded-lg hover:bg-blue-400"
+									: "mb-2 p-2 max-w-l  bg-gray-800 rounded-lg hover:bg-gray-900"
 							}
+									`}
 						>
 							<h2>{post.title}</h2>
-							<p className="text-gray-400">SubReddit: {post.subreddit}</p>
+							<p
+								className={
+									selectedPost?.index === index
+										? "text-white"
+										: "text-gray-400"
+								}
+							>
+								SubReddit: {post.subreddit}
+							</p>
+							<p
+								className={
+									selectedPost?.index === index
+										? "text-white"
+										: "text-gray-400"
+								}
+							>
+								Comments: {post.num_comments}
+							</p>
+							{post.selftext ? (
+								<Popover placement="bottom" showArrow={true}>
+									<PopoverTrigger>
+										<Button>View More</Button>
+									</PopoverTrigger>
+									<PopoverContent>
+										<div className="px-1 py-2 max-w-lg">
+											<div className="text-base font-bold">
+												{post.title}
+											</div>
+											<div className="text-small">{post.selftext}</div>
+										</div>
+									</PopoverContent>
+								</Popover>
+							) : null}
 						</div>
 					))}
 				</ScrollShadow>
