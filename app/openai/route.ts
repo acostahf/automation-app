@@ -1,5 +1,3 @@
-// @ts-ignore
-
 import OpenAI from "openai";
 
 const openai = new OpenAI({
@@ -23,7 +21,7 @@ export async function POST(request: Request) {
 			],
 			model: "gpt-3.5-turbo",
 		});
-
+		// @ts-ignore
 		return Response.json({ chatCompletion });
 	} catch (error) {
 		console.log("Openai route error:", error);
