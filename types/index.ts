@@ -10,3 +10,8 @@ export type Profile = {
 	prompt: string;
 	username: string;
 };
+
+export type Asset = {
+	label: string;
+	link: string;
+};
