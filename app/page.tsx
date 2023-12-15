@@ -30,7 +30,7 @@ export default function Home() {
 		fetchData();
 	}, []);
 	return (
-		<section className="w-full flex flex-row items-start justify-center gap-4 py-8 md:py-10">
+		<section className="w-full flex flex-col md:flex-row items-start justify-center gap-4 py-8 md:py-10">
 			<RedditPost
 				setSelectedPost={handleSelectedPost}
 				selectedPost={selectedPost}
