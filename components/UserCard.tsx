@@ -41,7 +41,6 @@ export default function UserCard({
 				}),
 			});
 			const data = await res.json();
-			console.log("---------", data);
 			setComment(data.chatCompletion.choices[0].message.content);
 			setLoading(false);
 		} catch (error) {
