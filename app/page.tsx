@@ -11,6 +11,10 @@ export default function Home() {
 	const [selectedPost, setSelectedPost] = useState([]);
 	const [profiles, setProfiles] = useState<Profile[]>([]);
 
+	const handleSelectedPost = (post: any) => {
+		setSelectedPost(post);
+	};
+
 	const fetchData = async () => {
 		try {
 			let { data, error } = await supabase.from("personas").select("*");
@@ -28,24 +32,14 @@ export default function Home() {
 	return (
 		<section className="w-full flex flex-row items-start justify-center gap-4 py-8 md:py-10">
 			<RedditPost
-				setSelectedPost={setSelectedPost}
+				setSelectedPost={handleSelectedPost}
 				selectedPost={selectedPost}
-				sourceType="subreddit"
-				sourceName="Particular-Cap6132"
 			/>
 
 			<div className="flex gap-3 flex-col w-full max-w-3xl">
 				<UserCard selectedPost={selectedPost} profiles={profiles} />
 				<AutomateSwitch />
 			</div>
-			{/* <div className="mt-8">
-				<RedditPost
-					setSelectedPost={setSelectedPost}
-					selectedPost={selectedPost}
-					sourceType="userActivity"
-					sourceName="Particular-Cap6132"
-				/>
-			</div> */}
 		</section>
 	);
 }

@@ -11,17 +11,15 @@ interface RedditPost {
 }
 
 interface RedditPostProps {
-	selectedPost: { index: number; post: RedditPost } | null;
-	setSelectedPost: (value: { index: number; post: RedditPost }) => void;
-	sourceType: "subreddit" | "userActivity";
-	sourceName: string; // subreddit name or username
+	selectedPost: Array<{ index: number; post: RedditPost }> | null;
+	setSelectedPost: React.Dispatch<
+		React.SetStateAction<{ index: number; post: RedditPost } | null>
+	>;
 }
 
 const RedditPost: React.FC<RedditPostProps> = ({
 	selectedPost,
 	setSelectedPost,
-	sourceType,
-	sourceName,
 }) => {
 	const [posts, setPosts] = useState<RedditPost[]>([]);
 	const [loading, setLoading] = useState(false);
