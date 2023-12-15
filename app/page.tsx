@@ -8,8 +8,8 @@ import { useEffect } from "react";
 import { Profile } from "@/types/index";
 
 export default function Home() {
-	const [selectedPost, setSelectedPost] = useState([]);
-	const [profiles, setProfiles] = useState<Profile[]>([]);
+	const [selectedPost, setSelectedPost] = useState([] as any);
+	const [profiles, setProfiles] = useState([] as any);
 
 	const handleSelectedPost = (post: any) => {
 		setSelectedPost(post);

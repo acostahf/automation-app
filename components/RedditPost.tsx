@@ -12,7 +12,7 @@ interface RedditPost {
 }
 
 interface RedditPostProps {
-	selectedPost: Array<{ index: number; post: RedditPost }> | null;
+	selectedPost: any;
 	setSelectedPost: React.Dispatch<
 		React.SetStateAction<{ index: number; post: RedditPost } | null>
 	>;
