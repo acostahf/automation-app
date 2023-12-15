@@ -58,7 +58,7 @@ const RedditPost: React.FC<RedditPostProps> = ({
 			const fetchedPosts = await Promise.all(
 				subreddits.map(async (subreddit) => {
 					const response = await fetch(
-						`https://www.reddit.com/r/${subreddit?.name}/new.json?limit=3`
+						`https://www.reddit.com/r/${subreddit?.name}/new.json?limit=10`
 					);
 					const data = await response.json();
 					return data.data.children.map((child: any) => child.data); // Return an array of posts for each subreddit
