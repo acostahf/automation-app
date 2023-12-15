@@ -1,6 +1,7 @@
 import { ScrollShadow, Skeleton } from "@nextui-org/react";
 import React, { useEffect, useState } from "react";
 import supabase from "@/supabaseClient";
+import { type } from "os";
 
 interface RedditPost {
 	title: string;
@@ -17,13 +18,18 @@ interface RedditPostProps {
 	>;
 }
 
+type Subreddit = {
+	id: number;
+	name: string;
+};
+
 const RedditPost: React.FC<RedditPostProps> = ({
 	selectedPost,
 	setSelectedPost,
 }) => {
 	const [posts, setPosts] = useState<RedditPost[]>([]);
 	const [loading, setLoading] = useState(false);
-	const [subreddits, setSubreddits] = useState([]);
+	const [subreddits, setSubreddits] = useState<Subreddit[]>([]);
 
 	const fetchSubreddits = async () => {
 		try {
@@ -43,10 +49,10 @@ const RedditPost: React.FC<RedditPostProps> = ({
 			const fetchedPosts = await Promise.all(
 				subreddits.map(async (subreddit) => {
 					const response = await fetch(
-						`https://www.reddit.com/r/${subreddit.name}/new.json?limit=3`
+						`https://www.reddit.com/r/${subreddit?.name}/new.json?limit=3`
 					);
 					const data = await response.json();
-					return data.data.children.map((child) => child.data); // Return an array of posts for each subreddit
+					return data.data.children.map((child: any) => child.data); // Return an array of posts for each subreddit
 				})
 			);
 			const mergedPosts = fetchedPosts.flatMap((post) => post); // Flatten the array of arrays into a single array
