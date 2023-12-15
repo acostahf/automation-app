@@ -1,4 +1,5 @@
-import { NextApiRequest, NextApiResponse } from "next";
+// @ts-ignore
+
 import OpenAI from "openai";
 
 const openai = new OpenAI({
@@ -23,7 +24,7 @@ export async function POST(request: Request) {
 			model: "gpt-3.5-turbo",
 		});
 
-		return Response.json({ chatCompletion });
+		return res.status(200).json({ chatCompletion });
 	} catch (error) {
 		console.log("Openai route error:", error);
 		return Response;
