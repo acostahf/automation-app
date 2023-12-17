@@ -9,7 +9,7 @@ export async function POST(request: Request) {
 
 	const post = res.post;
 	const profile = res.profile;
-	const prompt = `You are a reddit user and are commenting on a post about" + ${post.title} + ${post?.selftext} + ".\n\n" + use this persona ${profile} + "\n\nKeep it under 150 characters and no quote, no emojis, no hashtags .`;
+	const prompt = `I need you to comment on Reddit post. You should act as you are me the user. Here is the post." + ${post.title} + ${post?.selftext} + ".\n\n" + use this persona ${profile} + "\n\nKeep it under 150 characters and no quote, no emojis, no hashtags .`;
 
 	try {
 		const chatCompletion = await openai.chat.completions.create({
@@ -19,7 +19,7 @@ export async function POST(request: Request) {
 					content: prompt,
 				},
 			],
-			model: "gpt-3.5-turbo",
+			model: "gpt-4",
 		});
 		// @ts-ignore
 		return Response.json({ chatCompletion });

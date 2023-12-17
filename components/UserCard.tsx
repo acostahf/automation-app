@@ -91,6 +91,7 @@ export default function UserCard({
 	};
 
 	const handleSubmit = async () => {
+		setNotification("");
 		setLoading(true);
 		if (!selectedPost || selectedPersona === null) {
 			setNotification("No post selected or persona not chosen");
@@ -120,10 +121,7 @@ export default function UserCard({
 					}),
 				}
 			);
-
-			if (!response.ok) {
-				throw new Error(`HTTP error! Status: ${response.status}`);
-			}
+			console.log(response);
 
 			const data = await response.json();
 			setNotification(data.link);
